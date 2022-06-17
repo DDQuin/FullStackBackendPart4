@@ -2,6 +2,8 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-console */
 
+const blogsRouter = require('../controllers/blogs');
+
 const dummy = (blogs) => 1;
 
 const totalLikes = (blogs) => {
@@ -10,6 +12,16 @@ const totalLikes = (blogs) => {
   return blogs.reduce(reducer, 0);
 };
 
+const favoriteBlog = (blogs) => {
+  const max = blogs.reduce((pre, current) => ((pre.likes > current.likes) ? pre : current));
+  const returnBlog = {
+    title: max.title,
+    author: max.author,
+    likes: max.likes,
+  };
+  return returnBlog;
+};
+
 module.exports = {
-  dummy, totalLikes,
+  dummy, totalLikes, favoriteBlog,
 };
