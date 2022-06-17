@@ -179,3 +179,59 @@ describe('top author blog', () => {
     });
   });
 });
+
+describe('top author likes', () => {
+  const listWithOneBlog = [
+    {
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 5,
+      __v: 0,
+    },
+  ];
+
+  const listWithFiveLikesBlog = [
+    {
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful2',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 5,
+      __v: 0,
+    },
+    {
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful3',
+      author: 'Edsger W. Dijkstra2',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 8,
+      __v: 0,
+    },
+    {
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful4',
+      author: 'Edsger W. Dijkstra2',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 1,
+      __v: 0,
+    },
+  ];
+
+  test('when list has only one blog return that author', () => {
+    const result = listHelper.mostLikes(listWithOneBlog);
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra',
+      likes: 5,
+    });
+  });
+
+  test('returns top author likes out of list', () => {
+    const result = listHelper.mostLikes(listWithFiveLikesBlog);
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra2',
+      likes: 9,
+    });
+  });
+});

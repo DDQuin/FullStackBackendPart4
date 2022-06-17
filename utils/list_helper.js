@@ -35,13 +35,33 @@ const mostBlogs = (blogs) => {
       maxAuthor = author;
     }
   }
-  const returnAuthor = {
+  const returnMostBlogs = {
     author: maxAuthor,
     blogs: maxBlogs,
   };
-  return returnAuthor;
+  return returnMostBlogs;
+};
+
+const mostLikes = (blogs) => {
+  const authors = _.groupBy(blogs, 'author');
+  const authorNames = Object.keys(authors);
+  let maxAuthor = authorNames[0];
+  let maxLikes = totalLikes(authors[maxAuthor]);
+  // eslint-disable-next-line no-restricted-syntax
+  for (const author of authorNames) {
+    const currentAuthorMostLikes = totalLikes(authors[author]);
+    if (currentAuthorMostLikes > maxLikes) {
+      maxLikes = currentAuthorMostLikes;
+      maxAuthor = author;
+    }
+  }
+  const returnMostLikes = {
+    author: maxAuthor,
+    likes: maxLikes,
+  };
+  return returnMostLikes;
 };
 
 module.exports = {
-  dummy, totalLikes, favoriteBlog, mostBlogs,
+  dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes,
 };
