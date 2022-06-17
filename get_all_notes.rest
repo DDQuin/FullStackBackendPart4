@@ -1,0 +1,18 @@
+GET http://localhost:3003/api/blogs
+
+###
+DELETE http://localhost:3003/api/persons/3
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "PS5",
+  "author": "DDQuin",
+  "url": "http://google.com",
+  "likes": 5
+}
+
+###
+GET http://localhost:3001/info
