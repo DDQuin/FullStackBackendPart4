@@ -78,22 +78,22 @@ describe('addition of a new blog', () => {
     const postedBlog = blogsAtEnd.find((b) => b.title === 'Computer');
     expect(postedBlog.likes).toBe(0);
   });
-  /*
-  test('fails with status code 400 if data invalid', async () => {
-    const newNote = {
-      important: true,
+
+  test('fails with status code 400 if title and url missing', async () => {
+    const newBlog = {
+      author: 'DD',
+      likes: 4,
     };
 
     await api
-      .post('/api/notes')
-      .send(newNote)
+      .post('/api/blogs')
+      .send(newBlog)
       .expect(400);
 
-    const notesAtEnd = await helper.notesInDb();
+    const blogsAtEnd = await helper.blogsInDb();
 
-    expect(notesAtEnd).toHaveLength(helper.initialNotes.length);
-  });
-  */
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  }, 10000);
 });
 
 afterAll(() => {

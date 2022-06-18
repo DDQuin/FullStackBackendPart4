@@ -11,6 +11,7 @@ const blogsRouter = require('./controllers/blogs');
 const middleware = require('./utils/middleware');
 const logger = require('./utils/logger');
 const config = require('./utils/config');
+require('express-async-errors');
 
 const app = express();
 
