@@ -11,12 +11,12 @@ const api = supertest(app);
 
 const Blog = require('../models/blog');
 
-describe('when there is initially some blogs saved', () => {
-  beforeEach(async () => {
-    await Blog.deleteMany({});
-    await Blog.insertMany(helper.initialBlogs);
-  });
+beforeEach(async () => {
+  await Blog.deleteMany({});
+  await Blog.insertMany(helper.initialBlogs);
+});
 
+describe('when there is initially some blogs saved', () => {
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
@@ -24,10 +24,16 @@ describe('when there is initially some blogs saved', () => {
       .expect('Content-Type', /application\/json/);
   });
 
-  test('all blogs are returned', async () => {
+  test('blogs have correct length', async () => {
     const response = await api.get('/api/blogs');
 
     expect(response.body).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test('blog has id property', async () => {
+    const response = await api.get('/api/blogs');
+
+    expect(response.body[0].id).toBeDefined();
   });
 });
 
