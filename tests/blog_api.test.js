@@ -37,6 +37,47 @@ describe('when there is initially some blogs saved', () => {
   });
 });
 
+describe('addition of a new blog', () => {
+  test('succeeds with valid data', async () => {
+    const newBlog = {
+      title: 'Computer',
+      author: 'DDQuins2',
+      url: 'http://google.com',
+      likes: 100,
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+    const contents = blogsAtEnd.map((b) => b.title);
+    expect(contents).toContain(
+      'Computer',
+    );
+  });
+  /*
+  test('fails with status code 400 if data invalid', async () => {
+    const newNote = {
+      important: true,
+    };
+
+    await api
+      .post('/api/notes')
+      .send(newNote)
+      .expect(400);
+
+    const notesAtEnd = await helper.notesInDb();
+
+    expect(notesAtEnd).toHaveLength(helper.initialNotes.length);
+  });
+  */
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
