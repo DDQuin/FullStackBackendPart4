@@ -60,6 +60,24 @@ describe('addition of a new blog', () => {
       'Computer',
     );
   });
+
+  test('will have 0 likes if no likes are given', async () => {
+    const newBlog = {
+      title: 'Computer',
+      author: 'DDQuins2',
+      url: 'http://google.com',
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    const postedBlog = blogsAtEnd.find((b) => b.title === 'Computer');
+    expect(postedBlog.likes).toBe(0);
+  });
   /*
   test('fails with status code 400 if data invalid', async () => {
     const newNote = {
