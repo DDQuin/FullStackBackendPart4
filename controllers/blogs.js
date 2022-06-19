@@ -13,11 +13,16 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs);
 });
 
-blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
+blogsRouter.post('/', middleware.userExtractor, async (request, response, next) => {
   // eslint-disable-next-line prefer-destructuring
   const body = request.body;
-  const decodedToken = jwt.verify(request.token, process.env.SECRET);
-  if (!decodedToken.id) {
+  let decodedToken = null;
+  try {
+    decodedToken = jwt.verify(request.token, process.env.SECRET);
+  } catch (exception) {
+    next(exception);
+  }
+  if (!decodedToken || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' });
   }
   // eslint-disable-next-line prefer-destructuring
@@ -44,15 +49,19 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   }
 });
 
-blogsRouter.delete('/:id', async (request, response) => {
+blogsRouter.delete('/:id', async (request, response, next) => {
   const blog = await Blog.findById(request.params.id);
-  const decodedToken = jwt.verify(request.token, process.env.SECRET);
-  const userid = decodedToken.id;
-  if (!userid) {
+  let decodedToken = null;
+  try {
+    decodedToken = jwt.verify(request.token, process.env.SECRET);
+  } catch (exception) {
+    next(exception);
+  }
+  if (!decodedToken || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' });
   }
 
-  if (blog.user.toString() === userid) {
+  if (blog.user.toString() === decodedToken.id) {
     await Blog.findByIdAndRemove(request.params.id);
     response.status(204).end();
   } else {

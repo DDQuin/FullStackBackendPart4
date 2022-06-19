@@ -40,6 +40,24 @@ describe('when there is initially some blogs saved', () => {
 });
 
 describe('addition of a new blog', () => {
+  let token = null;
+  beforeEach(async () => {
+    await User.deleteMany({});
+
+    const passwordHash = await bcrypt.hash('sekret', 10);
+    const user = new User({ username: 'root', passwordHash });
+
+    await user.save();
+    const userLogin = {
+      username: 'root',
+      password: 'sekret',
+    };
+    const response = await api
+      .post('/api/login')
+      .set('Content-Type', 'application/json')
+      .send(userLogin);
+    token = response.body.token;
+  });
   test('succeeds with valid data', async () => {
     const newBlog = {
       title: 'Computer',
@@ -50,6 +68,7 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/);
@@ -72,6 +91,7 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/);
@@ -89,6 +109,7 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
       .send(newBlog)
       .expect(400);
 
@@ -96,26 +117,75 @@ describe('addition of a new blog', () => {
 
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
   }, 10000);
+  test('fails if token missing', async () => {
+    const newBlog = {
+      title: 'pog',
+      author: 'DD',
+      likes: 4,
+      url: 'http://google.com',
+    };
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', 'bearer 2e')
+      .send(newBlog)
+      .expect(401);
+
+    const blogsAtEnd = await helper.blogsInDb();
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
 });
 
 describe('deleting blog posts ', () => {
+  let token = null;
+  let blogId = null;
+  beforeEach(async () => {
+    await User.deleteMany({});
+
+    const passwordHash = await bcrypt.hash('sekret', 10);
+    const user = new User({ username: 'root', passwordHash });
+
+    await user.save();
+    const userLogin = {
+      username: 'root',
+      password: 'sekret',
+    };
+    const response = await api
+      .post('/api/login')
+      .set('Content-Type', 'application/json')
+      .send(userLogin);
+    token = response.body.token;
+
+    const newBlog = {
+      title: 'Computer5',
+      author: 'DDQuins2',
+      url: 'http://google.com',
+    };
+
+    const newBlogRes = await api
+      .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
+      .send(newBlog);
+    blogId = newBlogRes.body.id;
+  });
   test('delete a blog', async () => {
     const blogsAtStart = await helper.blogsInDb();
-    const blogToDelete = blogsAtStart[0];
 
     await api
-      .delete(`/api/blogs/${blogToDelete.id}`)
+      .delete(`/api/blogs/${blogId}`)
+      .set('Authorization', `bearer ${token}`)
       .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
 
     expect(blogsAtEnd).toHaveLength(
-      helper.initialBlogs.length - 1,
+      blogsAtStart.length - 1,
     );
 
     const contents = blogsAtEnd.map((b) => (b).title);
 
-    expect(contents).not.toContain(blogToDelete.title);
+    expect(contents).not.toContain('Computer5');
   });
 });
 
