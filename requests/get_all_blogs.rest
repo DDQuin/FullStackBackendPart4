@@ -15,3 +15,16 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3001/info
+
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "root",
+    "name": "Superuser",
+    "password": "salainen"
+}
+
+###
+GET http://localhost:3003/api/users
