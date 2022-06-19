@@ -6,10 +6,10 @@ DELETE http://localhost:3003/api/persons/3
 ###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYyYWY2NWNhMzRmZmI3NWVjOTE3MDliMyIsImlhdCI6MTY1NTY2NjY0MX0.hqzZjCne39Ca2MZiKpPxd2IcrbgcDPwbxAjkx7oo5_Y
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYyYWY2NWNhMzRmZmI3NWVjOTE3MDliMyIsImlhdCI6MTY1NTY2NzIyMH0.l8_pdgfzMglaS1_HXFFXDUTQdRxWATNXdAq87Mkl-8g
 
 {
-  "title": "pog",
+  "title": "pog2",
   "author": "DDQuin",
   "url": "http://google.com",
   "likes": 5
