@@ -7,10 +7,10 @@ Authorization: bearer eyJhbGciOiJIUszI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJv
 ###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYyYWY2NWNhMzRmZmI3NWVjOTE3MDliMyIsImlhdCI6MTY1NTY2NzgyOX0.Ev9Mj4MBaCb_O3r8cqjVX3G379OoRMQUATJU_S6X4hQ
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3RuZXciLCJpZCI6IjYyYWY3Y2E4NDc5MTlhYzI3ZTVhMDNhYSIsImlhdCI6MTY1NTY2ODcxMn0.T503LRKI_8xKAmS-gV2MtWcBPtE1lv7EYCAEpfqW_rg
 
 {
-  "title": "pog2",
+  "title": "pog3",
   "author": "DDQuin",
   "url": "http://google.com",
   "likes": 5

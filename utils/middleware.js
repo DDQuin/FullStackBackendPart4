@@ -4,7 +4,9 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-console */
 
+const jwt = require('jsonwebtoken');
 const logger = require('./logger');
+const User = require('../models/user');
 
 const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method);
@@ -25,6 +27,21 @@ const tokenExtractor = (request, response, next) => {
   } else {
     request.token = null;
   }
+
+  next();
+};
+
+const userExtractor = async (request, response, next) => {
+  const authorization = request.get('authorization');
+  let token = null;
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    token = authorization.substring(7);
+  }
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' });
+  }
+  request.user = await User.findById(decodedToken.id);
 
   next();
 };
@@ -50,4 +67,5 @@ module.exports = {
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
+  userExtractor,
 };
