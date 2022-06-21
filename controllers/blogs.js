@@ -13,7 +13,7 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs);
 });
 
-blogsRouter.post('/', middleware.userExtractor, async (request, response, next) => {
+blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   // eslint-disable-next-line prefer-destructuring
   const body = request.body;
   /*
@@ -31,7 +31,6 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response, next) 
   if (!decodedToken || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' });
   }
-
   // eslint-disable-next-line prefer-destructuring
   const user = request.user;
 
