@@ -190,6 +190,24 @@ describe('deleting blog posts ', () => {
 });
 
 describe('updating blog posts ', () => {
+  let token = null;
+  beforeEach(async () => {
+    await User.deleteMany({});
+
+    const passwordHash = await bcrypt.hash('sekret', 10);
+    const user = new User({ username: 'root', passwordHash });
+
+    await user.save();
+    const userLogin = {
+      username: 'root',
+      password: 'sekret',
+    };
+    const response = await api
+      .post('/api/login')
+      .set('Content-Type', 'application/json')
+      .send(userLogin);
+    token = response.body.token;
+  });
   test('update a blog', async () => {
     const blogsAtStart = await helper.blogsInDb();
     const blogsAtStartID = blogsAtStart[0].id;
@@ -198,6 +216,7 @@ describe('updating blog posts ', () => {
 
     await api
       .put(`/api/blogs/${blogsAtStartID}`)
+      .set('Authorization', `bearer ${token}`)
       .send(blogToUpdate)
       .expect(200);
 

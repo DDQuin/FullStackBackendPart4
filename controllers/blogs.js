@@ -5,7 +5,7 @@
 const blogsRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
 const Blog = require('../models/blog');
-const middleware = require('../utils/middleware');
+const User = require('../models/user');
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -13,7 +13,7 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs);
 });
 
-blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
+blogsRouter.post('/', async (request, response, next) => {
   // eslint-disable-next-line prefer-destructuring
   const body = request.body;
   /*
@@ -28,11 +28,12 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   } catch (exception) {
     next(exception);
   }
+
   if (!decodedToken || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' });
+    return response.status(401).end();
   }
   // eslint-disable-next-line prefer-destructuring
-  const user = request.user;
+  const user = await User.findById(decodedToken.id);
 
   const blog = new Blog({ ...request.body, user: user.id });
 
@@ -68,13 +69,20 @@ blogsRouter.delete('/:id', async (request, response, next) => {
   }
 });
 
-blogsRouter.put('/:id', middleware.userExtractor, async (request, response) => {
+blogsRouter.put('/:id', async (request, response, next) => {
   // eslint-disable-next-line prefer-destructuring
   const body = request.body;
 
-  if (!request.user) {
+  let decodedToken = null;
+  try {
+    decodedToken = jwt.verify(request.token, process.env.SECRET);
+  } catch (exception) {
+    next(exception);
+  }
+  if (!decodedToken || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' });
   }
+
   const blog = {
     title: body.title,
     author: body.important,
