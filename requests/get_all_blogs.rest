@@ -24,9 +24,9 @@ POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-    "username": "rootnew",
-    "name": "Superuser",
-    "password": "salainen"
+    "username": "admin",
+    "name": "adminReal",
+    "password": "root"
 }
 
 ###
